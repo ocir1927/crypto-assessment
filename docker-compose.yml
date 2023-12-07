@@ -1,0 +1,36 @@
+version: '3'
+services:
+  recommendation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+
+  database:
+    image: 'postgres:13.1-alpine'
+    command: postgres -c 'max_connections=250'
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: recommendation_service
+      TZ: 'ZULU'
+      PGTZ: 'ZULU'
+
+  database-test:
+    image: 'postgres:13.1-alpine'
+    command: postgres -c 'max_connections=250'
+    restart: always
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: recommendation_service_test
+      TZ: 'ZULU'
+      PGTZ: 'ZULU'
